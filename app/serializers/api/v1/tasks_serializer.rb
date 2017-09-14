@@ -10,7 +10,10 @@ class Api::V1::TasksSerializer < ActiveModel::Serializer
             title: object.title
         },
         relationships: {
-            tags: object.format_tags
+            tags: {
+                data: object.format_tags
+            }
+
         }
     }
   end

@@ -1,5 +1,5 @@
 class Api::V1::TagsSerializer < ActiveModel::Serializer
-  attributes :id, :type, :title, :included
+  attributes :id, :type, :title
 
   def type
     'tags'
