@@ -1,0 +1,126 @@
+{
+	"id": "7d66f514-1f53-4726-a9ed-b9f69fe8dfc7",
+	"name": "RoR Interview",
+	"allTests": [],
+	"timestamp": "2017-09-13T04:14:16.722Z",
+	"collection_id": "08fd22ff-1ee1-232d-a09e-7bcd8e04d00e",
+	"folder_id": 0,
+	"target_type": "collection",
+	"environment_id": "no-environment",
+	"data": [],
+	"delay": 0,
+	"count": 1,
+	"collection": {
+		"id": "08fd22ff-1ee1-232d-a09e-7bcd8e04d00e",
+		"name": "RoR Interview",
+		"description": "Set of actions prepared for RoR Backend candidates to complete task",
+		"order": [],
+		"folders": [
+			{
+				"id": "90d98636-dcc1-21f0-949b-495bdcf63ec0",
+				"name": "Tags",
+				"description": "",
+				"order": [
+					"20d19166-1f48-d84b-7ee2-0dbf82ea5e83",
+					"d589d864-1c54-7aa4-fca6-60d13322e3b3",
+					"834780ef-2d6c-727a-510c-72b6287667b1"
+				],
+				"folders_order": [],
+				"owner": "1268837",
+				"collection": "08fd22ff-1ee1-232d-a09e-7bcd8e04d00e",
+				"collectionId": "08fd22ff-1ee1-232d-a09e-7bcd8e04d00e",
+				"collection_id": "08fd22ff-1ee1-232d-a09e-7bcd8e04d00e"
+			},
+			{
+				"id": "bf3f6ee7-d87d-bdba-bb30-61fa423c0ab4",
+				"name": "Tasks",
+				"description": "",
+				"order": [
+					"b18851be-d673-7367-7b9f-85a9b2a10132",
+					"7bf97d69-8e24-6b30-93c0-7d2a5ce83626",
+					"1131f009-40a2-3200-5d35-9a14da95ea46",
+					"5ea0c3c7-0039-ca40-552c-297d938cf146",
+					"f94ee0cc-c19e-0ae6-232e-94109c20451b",
+					"7da9a020-551d-9215-f9bc-6b9e0f40fac9"
+				],
+				"folders_order": [],
+				"owner": "1268837",
+				"collection": "08fd22ff-1ee1-232d-a09e-7bcd8e04d00e",
+				"collectionId": "08fd22ff-1ee1-232d-a09e-7bcd8e04d00e",
+				"collection_id": "08fd22ff-1ee1-232d-a09e-7bcd8e04d00e"
+			}
+		],
+		"folders_order": [
+			"bf3f6ee7-d87d-bdba-bb30-61fa423c0ab4",
+			"90d98636-dcc1-21f0-949b-495bdcf63ec0"
+		],
+		"timestamp": 0,
+		"synced": true,
+		"remote_id": 0,
+		"owner": "1268837",
+		"sharedWithTeam": false,
+		"subscribed": false,
+		"remoteLink": "",
+		"remoteLinkUpdatedAt": null,
+		"public": false,
+		"createdAt": 1505066993166,
+		"updatedAt": 1505066993166,
+		"write": true,
+		"published": false,
+		"favorite": false,
+		"permissions": {},
+		"syncedPermissions": {}
+	},
+	"folder": null,
+	"environment": null,
+	"globals": [],
+	"results": [
+		{
+			"name": "Tasks Index",
+			"id": "b18851be-d673-7367-7b9f-85a9b2a10132",
+			"url": "http://localhost:3000/api/v1/tasks",
+			"totalTime": 0,
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				"10097"
+			],
+			"allTests": [
+				{}
+			],
+			"time": "10097",
+			"totalRequestTime": "10097",
+			"iterationResults": {}
+		}
+	],
+	"totalPass": 0,
+	"totalFail": 0,
+	"totalTime": 10097,
+	"lifecycle": "done",
+	"requests": [
+		{
+			"name": "Tasks Index",
+			"id": "b18851be-d673-7367-7b9f-85a9b2a10132",
+			"url": "http://localhost:3000/api/v1/tasks",
+			"time": "2017-09-13T04:14:16.722Z",
+			"responseCode": {
+				"code": 200,
+				"name": "OK",
+				"detail": {
+					"name": "OK",
+					"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+				}
+			},
+			"testPassFailCounts": {}
+		}
+	],
+	"synced": false
+}
