@@ -1,20 +1,6 @@
 class Api::V1::TasksSerializer < ActiveModel::Serializer
+  attributes :id, :title
 
-  attributes :data
+  has_many :tags
 
-  def data
-    {
-        id: object.id,
-        type: 'tasks',
-        attributes: {
-            title: object.title
-        },
-        relationships: {
-            tags: {
-                data: object.format_tags
-            }
-
-        }
-    }
-  end
 end

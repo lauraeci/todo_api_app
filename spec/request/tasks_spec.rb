@@ -80,10 +80,12 @@ RSpec.describe 'Tasks Requests', :type => :request do
                 {"tags":
                      {"data":
                           [{"id": "2", "type": "tags"}, {"id": "3", "type": "tags"}]}}},
-         "included": [{"id": "2", "type": "tags", "attributes": {"title": "Urgent"},
-                       "relationships": {"tasks": {"data": [{"id": "2", "type": "tasks"}]}}},
-                      {"id": "3", "type": "tags", "attributes": {"title": "Home"},
-                       "relationships": {"tasks": {"data": [{"id": "2", "type": "tasks"}]}}}]
+         "included": [
+             {"id": "2", "type": "tags", "attributes": {"title": "Urgent"},
+              "relationships": {"tasks": {"data": [{"id": "2", "type": "tasks"}]}}},
+             {"id": "3", "type": "tags", "attributes": {"title": "Home"},
+              "relationships": {"tasks": {"data": [{"id": "2", "type": "tasks"}]}}}
+         ]
         }
       }
       it 'Update Task with Tag (Expect Tags)' do
