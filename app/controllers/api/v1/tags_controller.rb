@@ -1,5 +1,10 @@
 class Api::V1::TagsController < ApplicationController
   before_action :set_tag, only: [:show, :update, :destroy]
+  before_filter :json_api
+
+  def json_api
+    ActiveModelSerializers.config.adapter = :json_api
+  end
 
   def index
     @tags = Tag.all
@@ -32,7 +37,7 @@ class Api::V1::TagsController < ApplicationController
     @tag = Tag.new(tag_params)
 
     if @tag.save
-      data = serializer.new(@tag).attributes[:tags]
+      data = serializer.new(@tag)
       render json: data, status: :created
     else
       render json: @tag.errors, status: :unprocessable_entity
@@ -45,13 +50,17 @@ class Api::V1::TagsController < ApplicationController
     @tag = Tag.find(params[:id])
   end
 
-  def serializer
-    Api::V1::TagsSerializer
+  def tag_params
+    params.require(:data)
+        .permit(
+            :id,
+            {
+                attributes: [:title]
+            }
+        )
   end
 
-  def tag_params
-    params.require(:data).permit({
-                                     attributes: [:title]
-                                 })
+  def serializer
+    Api::V1::TagsSerializer
   end
 end

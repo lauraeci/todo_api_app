@@ -8,7 +8,7 @@ end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.4'
 
-gem 'active_model_serializers', '~> 0.10.0'
+gem 'active_model_serializers', '~> 0.10.0.rc3'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', '1.3.13'
@@ -31,5 +31,6 @@ end
 group :test do
   gem 'rspec-rails', '~> 3.5'
   gem 'json_spec', '1.1.5'
+  gem 'timecop', '0.9.1'
 end
 

@@ -2,18 +2,13 @@ class Api::V1::TasksController < ApplicationController
   before_action :set_task, only: [:show, :update, :destroy]
 
   def show
-    data = serializer.new(@task)
-    render json: data
+    render json: @task, serializer: Api::V1::TasksSerializer, status: :ok
   end
 
   def index
-    all_tasks = Task.all
+    tasks = Task.all
 
-    tasks = all_tasks.map do |t|
-      serializer.new(t).to_json
-    end
-
-    render json: tasks, status: :ok
+    render json: tasks, each_serializer: Api::V1::TasksSerializer, status: :ok
   end
 
   def new
@@ -23,8 +18,7 @@ class Api::V1::TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
     if @task.save
-      data = serializer.new(@task).to_json
-      render json: data, status: :created
+      render json: @task, serializer: Api::V1::TasksSerializer, status: :created
     else
       render json: @task.errors, status: :unprocessable_entity
     end
@@ -41,8 +35,7 @@ class Api::V1::TasksController < ApplicationController
 
     @task.title = attrs[:attributes][:title]
     if @task.save
-      data = serializer.new(@task).to_json
-      render json: data
+      render json: @task, serializer: Api::V1::TasksSerializer
     else
       render json: @task.errors, status: :unprocessable_entity
     end
