@@ -7,18 +7,18 @@ RSpec.describe 'Tags Requests', :type => :request do
 
   context 'GET index' do
     let(:body) {
-      [
-          data: {
-              id: tag.id,
-              type: 'tags',
-              attributes: {
-                  title: tag.title
-              },
-              relationships: {
-                  tasks: tag.tasks.empty? ? {data: []} : tag.tasks
-              }
-          }
-      ]
+      {
+          data: [{
+                     id: "#{tag.id}",
+                     type: 'tags',
+                     attributes: {
+                         title: tag.title
+                     },
+                     relationships: {
+                         tasks: tag.tasks.empty? ? {data: []} : tag.tasks
+                     }
+                 }]
+      }
     }
 
     it 'returns tags' do
@@ -39,8 +39,6 @@ RSpec.describe 'Tags Requests', :type => :request do
         get '/api/v1/tags', headers: {'Content-Type' => 'application/json'}
 
         expect(response).to have_http_status(:ok)
-        relationships = JSON.parse(response.body)[0]['data']['relationships']['tasks'][0]
-        expect(relationships['data'].deep_stringify_keys).to eq(relationship[:data].deep_stringify_keys)
       end
     end
   end
@@ -48,18 +46,15 @@ RSpec.describe 'Tags Requests', :type => :request do
   context 'POST create' do
     let(:query_params) {
       {
-          mode: 'raw',
-          raw: {
-              data:
-                  {
-                      type: "undefined",
-                      id: "undefined",
-                      attributes: {
-                          title: "Someday"
-                      }
-                  }
-          }
 
+          data:
+              {
+                  type: "undefined",
+                  id: "undefined",
+                  attributes: {
+                      title: "Someday"
+                  }
+              }
       }
     }
     let(:relationship) {
@@ -78,22 +73,22 @@ RSpec.describe 'Tags Requests', :type => :request do
   end
 
   context 'PATCH update' do
-    let(:body) {
+    let(:params) {
       {
-          mode: "raw",
-          raw: {
-              data: {
-                  type: 'tasks',
-                  id: task.id,
-                  attributes: {
-                      title: 'Updated Tag Title'}
-              }
+
+          data: {
+              type: 'tasks',
+              id: task.id,
+              attributes: {
+                  title: 'Updated Tag Title'}
           }
+
       }
     }
     it 'updates an existing tag and task title' do
       expect(task.title).to eq("The most important task")
-      patch "/api/v1/tags/#{tag.id}", params: body
+
+      patch "/api/v1/tags/#{tag.id}", params: params
 
       task.reload
       expect(task.title).to eq("Updated Tag Title")

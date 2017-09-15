@@ -9,7 +9,7 @@ RSpec.describe 'Tasks Requests', :type => :request do
 
   context 'Get index' do
     let(:task_json) {
-      "{\"data\":[{\"id\":\"2\",\"type\":\"tasks\",\"attributes\":{\"title\":\"Updated Task Title\"},\"relationships\":{\"tags\":{\"data\":[{\"id\":1,\"title\":\"Urgent\",\"created_at\":\"2015-09-09T00:00:00.000Z\",\"updated_at\":\"2015-09-09T00:00:00.000Z\"},{\"id\":2,\"title\":\"Home\",\"created_at\":\"2015-09-09T00:00:00.000Z\",\"updated_at\":\"2015-09-09T00:00:00.000Z\"}]}}}}"  }
+      "{\"data\":[{\"id\":\"#{task.id}\",\"type\":\"tasks\",\"attributes\":{\"title\":\"The best thing\"},\"relationships\":{\"tags\":{\"data\":[{\"id\":#{task.id},\"title\":\"Urgent\",\"created_at\":\"2015-09-09T00:00:00.000Z\",\"updated_at\":\"2015-09-09T00:00:00.000Z\"},{\"id\":2,\"title\":\"Home\",\"created_at\":\"2015-09-09T00:00:00.000Z\",\"updated_at\":\"2015-09-09T00:00:00.000Z\"}]}}}}"  }
 
     it 'gets tasks' do
       get '/api/v1/tasks'
@@ -123,7 +123,7 @@ RSpec.describe 'Tasks Requests', :type => :request do
         patch "/api/v1/tasks/#{task2.id}", params: params
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include_json("{\"data\":{\"id\":\"2\",\"type\":\"tasks\",\"attributes\":{\"title\":\"Updated Task Title\"},\"relationships\":{\"tags\":{\"data\":[{\"id\":1,\"title\":\"Urgent\",\"created_at\":\"2017-09-15T06:21:43.146Z\",\"updated_at\":\"2017-09-15T06:21:43.146Z\"},{\"id\":2,\"title\":\"Home\",\"created_at\":\"2017-09-15T06:21:43.170Z\",\"updated_at\":\"2017-09-15T06:21:43.170Z\"}]}}}}")
+        expect(response.body).to include_json(body.to_json)
       end
     end
 
@@ -143,7 +143,7 @@ RSpec.describe 'Tasks Requests', :type => :request do
       let(:body) {
         {
             "data": {
-                "id": task.id,
+                "id": "#{task.id}",
                 "type": "tasks",
                 "attributes": {
                     "title": "Updated Task Title"

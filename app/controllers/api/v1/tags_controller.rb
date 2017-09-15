@@ -1,34 +1,30 @@
 class Api::V1::TagsController < ApplicationController
   before_action :set_tag, only: [:show, :update, :destroy]
-  before_filter :json_api
-
-  def json_api
-    ActiveModelSerializers.config.adapter = :json_api
-  end
 
   def index
     @tags = Tag.all
 
-    tags = @tags.map do |t|
-      serializer.new(t).to_json
-    end
-
-    render json: tags, status: :ok
+    render json: @tags, each_serializer: Api::V1::TagsSerializer, status: :ok
   end
 
   def update
     data = params['data']
     type = params['type']
-    id = id['id']
+    id = params['id']
+    puts id
+
+    @tag.update_attributes(tag_params["attributes"])
 
     if type == 'tasks'
       task = Task.find id
       if task
-        @tag.update_attributes(tag_params)
+        puts task
         if task.tagged_with?(@tag)
           task.tags << @tag
         end
-        return render json: Api::V1::TagsSerializer.new(@tag).attributes[:tags], status: :ok
+        return render json: task, serializer: Api::V1::TasksSerializer, status: :ok
+      else
+        return render nothing: true, status: :no_content
       end
     end
   end
@@ -37,8 +33,7 @@ class Api::V1::TagsController < ApplicationController
     @tag = Tag.new(tag_params)
 
     if @tag.save
-      data = serializer.new(@tag)
-      render json: data, status: :created
+      render json: @tag, serializer: Api::V1::TagsSerializer, status: :created
     else
       render json: @tag.errors, status: :unprocessable_entity
     end
@@ -58,9 +53,5 @@ class Api::V1::TagsController < ApplicationController
                 attributes: [:title]
             }
         )
-  end
-
-  def serializer
-    Api::V1::TagsSerializer
   end
 end
