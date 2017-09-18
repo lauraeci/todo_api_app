@@ -54,7 +54,6 @@ class Api::V1::TasksController < ApplicationController
   def task_params
     params.require(:data)
         .permit(
-            :id,
             # has_many: :tags (Nested Attributes)
             {:attributes => [:title, :tags => []]}
         )
