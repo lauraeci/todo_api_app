@@ -1,5 +1,5 @@
 class Api::V1::TasksController < ApplicationController
-  before_action :set_task, only: [:show, :update, :destroy]
+  before_action :set_task, only: [:show, :update]
 
   def show
     render json: @task, serializer: Api::V1::TasksSerializer, status: :ok
@@ -8,7 +8,7 @@ class Api::V1::TasksController < ApplicationController
   def index
     tasks = Task.all
 
-    render json: tasks, each_serializer: Api::V1::TasksSerializer, status: :ok
+    render json: tasks, each_serializer: Api::V1::TasksSerializer, include: ['tags'], status: :ok
   end
 
   def new
@@ -18,7 +18,7 @@ class Api::V1::TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
     if @task.save
-      render json: @task, serializer: Api::V1::TasksSerializer, status: :created
+      render json: @task, serializer: Api::V1::TasksSerializer, include: ['tags'], status: :created
     else
       render json: @task.errors, status: :unprocessable_entity
     end
@@ -29,20 +29,27 @@ class Api::V1::TasksController < ApplicationController
     if attrs[:attributes][:tags]
       tags = attrs[:attributes][:tags]
       tags.each do |t|
-        @task.add_tag(t)
+        tag = Tag.new(title: t)
+        @task.tasks_tags.create(tag: tag)
       end
     end
 
     @task.title = attrs[:attributes][:title]
     if @task.save
-      render json: @task, serializer: Api::V1::TasksSerializer
+      render json: @task, serializer: Api::V1::TasksSerializer, include: ['tags']
     else
       render json: @task.errors, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @task.destroy
+    task = Task.where(id: params[:id]).first
+    if task
+      task.destroy
+      render nothing: true, status: :accepted
+    else
+      render nothing: true, status: :no_content
+    end
   end
 
   protected

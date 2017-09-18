@@ -7,15 +7,61 @@ RSpec.describe 'Tasks Requests', :type => :request do
 
   before(:each) { Timecop.freeze(Time.parse("2015-09-09T00:00:00.000Z")) }
 
-  context 'Get index' do
-    let(:task_json) {
-      "{\"data\":[{\"id\":\"#{task.id}\",\"type\":\"tasks\",\"attributes\":{\"title\":\"The best thing\"},\"relationships\":{\"tags\":{\"data\":[{\"id\":#{task.id},\"title\":\"Urgent\",\"created_at\":\"2015-09-09T00:00:00.000Z\",\"updated_at\":\"2015-09-09T00:00:00.000Z\"},{\"id\":2,\"title\":\"Home\",\"created_at\":\"2015-09-09T00:00:00.000Z\",\"updated_at\":\"2015-09-09T00:00:00.000Z\"}]}}}}"  }
+  context 'DELETE' do
+    it 'deletes successfully' do
+      delete "/api/v1/tasks/#{task.id}"
+      expect(response).to have_http_status(:accepted)
+    end
 
+    it 'deletes returns 204 if object not found' do
+      delete "/api/v1/tasks/99"
+      expect(response).to have_http_status(:no_content)
+    end
+
+  end
+
+  context 'Get index' do
+    let(:task1_json) {
+
+
+      {
+          "id" => "#{task.id}",
+          "type" => "tasks",
+          "attributes" => {
+              "title" => task.title
+          },
+          "relationships" => {
+              "tags" => {
+                  "data" => []
+              }
+          }
+      }
+
+
+    }
+    let(:task2_json) {
+
+      {
+          "id" => "#{task2.id}",
+          "type" => "tasks",
+          "attributes" => {
+              "title" => task2.title
+          },
+          "relationships" => {
+              "tags" => {
+                  "data" => []
+              }
+          }
+      }
+    }
     it 'gets tasks' do
       get '/api/v1/tasks'
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to eq(task_json)
+
+      expect(JSON.parse(response.body)["data"][0]).to eq(task1_json)
+      expect(JSON.parse(response.body)["data"][1]).to eq(task2_json)
+
     end
 
     context 'includes tags' do
@@ -72,7 +118,7 @@ RSpec.describe 'Tasks Requests', :type => :request do
       post '/api/v1/tasks', params: params
 
       expect(response).to have_http_status(:created)
-      expect(response.body).to eq("{\"data\":{\"id\":\"0\",\"type\":\"tasks\",\"attributes\":{\"title\":\"Do Homework\"},\"relationships\":{\"tags\":{\"data\":[]}}}}")
+      expect(response.body).to eq("{\"data\":{\"id\":\"3\",\"type\":\"tasks\",\"attributes\":{\"title\":\"Do Homework\"},\"relationships\":{\"tags\":{\"data\":[]}}}}")
     end
   end
 
@@ -101,21 +147,21 @@ RSpec.describe 'Tasks Requests', :type => :request do
         }
       }
 
-      let(:body) {
-        {"data": {
-            "id": "#{task.id}",
-            "type": "tasks",
-            "attributes":
-                {"title": "Updated Task Title"},
-            "relationships":
-                {"tags":
-                     {"data":
-                          [{"id": "2", "type": "tags"}, {"id": "3", "type": "tags"}]}}},
-         "included": [
-             {"id": "2", "type": "tags", "attributes": {"title": "Urgent"},
-              "relationships": {"tasks": {"data": [{"id": "2", "type": "tasks"}]}}},
-             {"id": "3", "type": "tags", "attributes": {"title": "Home"},
-              "relationships": {"tasks": {"data": [{"id": "2", "type": "tasks"}]}}}
+      let(:res) {
+        {"data" => {
+            "id" => "#{task2.id}",
+            "type" => "tasks",
+            "attributes" =>
+                {"title" => "Updated Task Title"},
+            "relationships" => {
+                "tags" => {"data" => [{"id" => "1", "type" => "tags"}, {"id" => "2", "type" => "tags"}]}}},
+         "included" => [{"id" => "1", "type" => "tags",
+                         "attributes" => {"title" => "Urgent"},
+                         "relationships" => {"tasks" => {"data" => [{"id" => "2", "type" => "tasks"}]}}
+                        }, {"id" => "2", "type" => "tags",
+                            "attributes" => {"title" => "Home"},
+                            "relationships" =>
+                                {"tasks" => {"data" => [{"id" => "2", "type" => "tasks"}]}}}
          ]
         }
       }
@@ -123,7 +169,7 @@ RSpec.describe 'Tasks Requests', :type => :request do
         patch "/api/v1/tasks/#{task2.id}", params: params
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include_json(body.to_json)
+        expect(response.body).to eq(res.to_json)
       end
     end
 

@@ -4,36 +4,30 @@ class Api::V1::TagsController < ApplicationController
   def index
     @tags = Tag.all
 
-    render json: @tags, each_serializer: Api::V1::TagsSerializer, status: :ok
+    render json: @tags, each_serializer: Api::V1::TagsSerializer, include: ['task'], status: :ok
   end
 
   def update
-    data = params['data']
-    type = params['type']
-    id = params['id']
-    puts id
+    type = tag_params['type']
+    id = tag_params['id']
 
     @tag.update_attributes(tag_params["attributes"])
 
     if type == 'tasks'
       task = Task.find id
       if task
-        puts task
-        if task.tagged_with?(@tag)
-          task.tags << @tag
-        end
-        return render json: task, serializer: Api::V1::TasksSerializer, status: :ok
+        return render json: @tag, serializer: Api::V1::TagsSerializer, include: ['task'], status: :ok
       else
-        return render nothing: true, status: :no_content
+        return render json: {errors: "Can't find task id #{id}"}, status: :unprocessable_entity
       end
     end
   end
 
   def create
-    @tag = Tag.new(tag_params)
+    @tag = Tag.new(tag_params[:attributes])
 
     if @tag.save
-      render json: @tag, serializer: Api::V1::TagsSerializer, status: :created
+      render json: @tag, serializer: Api::V1::TagsSerializer, include: ['task'], status: :created
     else
       render json: @tag.errors, status: :unprocessable_entity
     end
@@ -49,6 +43,7 @@ class Api::V1::TagsController < ApplicationController
     params.require(:data)
         .permit(
             :id,
+            :type,
             {
                 attributes: [:title]
             }

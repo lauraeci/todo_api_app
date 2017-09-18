@@ -73,6 +73,10 @@ RSpec.describe 'Tags Requests', :type => :request do
   end
 
   context 'PATCH update' do
+    before(:each) do
+      task.tasks_tags.create(tag: tag)
+    end
+
     let(:params) {
       {
 
@@ -85,16 +89,30 @@ RSpec.describe 'Tags Requests', :type => :request do
 
       }
     }
+
+    let(:res) {
+      {"data" => {
+          "id" => "#{tag.id}",
+          "type" => "tags",
+          "attributes" => {
+              "title" => "Updated Tag Title"},
+          "relationships" => {
+              "tasks" => {
+                  "data" => [
+                      {"id" => "#{task.id}", "type" => "tasks"}
+                  ]}
+          }}}
+    }
     it 'updates an existing tag and task title' do
       expect(task.title).to eq("The most important task")
 
       patch "/api/v1/tags/#{tag.id}", params: params
 
-      task.reload
-      expect(task.title).to eq("Updated Tag Title")
+      tag.reload
+      expect(tag.title).to eq("Updated Tag Title")
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to eq(Api::V1::TasksSerializer.new(task).attributes[:tasks].to_json)
+      expect(response.body).to eq(res.to_json)
 
     end
   end
