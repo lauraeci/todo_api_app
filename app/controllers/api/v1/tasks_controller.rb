@@ -29,13 +29,12 @@ class Api::V1::TasksController < ApplicationController
     if attrs[:attributes][:tags]
       tags = attrs[:attributes][:tags]
       tags.each do |t|
-        tag = Tag.new(title: t)
+        tag = Tag.find_or_create_by(title: t)
         @task.tasks_tags.create(tag: tag)
       end
     end
 
-    @task.title = attrs[:attributes][:title]
-    if @task.save
+    if @task.update_attributes(attrs[:attributes].except(:tags))
       render json: @task, serializer: Api::V1::TasksSerializer, include: ['tags']
     else
       render json: @task.errors, status: :unprocessable_entity

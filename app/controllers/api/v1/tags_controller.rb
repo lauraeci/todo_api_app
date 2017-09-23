@@ -2,7 +2,14 @@ class Api::V1::TagsController < ApplicationController
   before_action :set_tag, only: [:show, :update, :destroy]
 
   def index
-    @tags = Tag.all
+    puts params[:query]
+    if params[:query].present?
+      query = params[:query]
+      puts Tag.where("title LIKE ? ", "%#{query}%".freeze).all.to_sql
+      @tags = Tag.where("title LIKE ? ", "%#{query}%".freeze).all
+    else
+      @tags = Tag.all
+    end
 
     render json: @tags, each_serializer: Api::V1::TagsSerializer, include: ['task'], status: :ok
   end

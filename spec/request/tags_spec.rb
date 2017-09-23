@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'spec_helper'
 
 RSpec.describe 'Tags Requests', :type => :request do
-  let!(:tag) { FactoryGirl.create(:tag, title: 'The best tag') }
+  let!(:tag) { FactoryGirl.create(:tag, title: 'The BEST tag') }
   let!(:task) { FactoryGirl.create(:task, title: 'The most important task') }
 
   context 'GET index' do
@@ -22,10 +22,29 @@ RSpec.describe 'Tags Requests', :type => :request do
     }
 
     it 'returns tags' do
-      get '/api/v1/tags'
+      get '/api/v1/tags', query_param
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to eq(body.to_json)
+    end
+
+    context 'has query params' do
+
+      let(:query_param) {
+        {
+            query: "best"
+        }
+      }
+
+      # let!(:tag2) { FactoryGirl.create(:tag, title: 'The best tag') }
+      let!(:tag2) { FactoryGirl.create(:tag, title: 'The worst tag') }
+
+      it 'returns filtered tags when query param is present' do
+        get '/api/v1/tags', params: query_param
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq(body.to_json)
+      end
     end
 
     context 'includes tasks' do
